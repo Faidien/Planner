@@ -10,34 +10,32 @@ namespace ConsoleApp1
             bool isExit = false;
 
             string userAnswer = "";
-            // Я таки смог прикрутить библиотеку, чтобы печатать тему задания более менее "красиво": * * * * * *  Заголовок * * * * * * 
+            Record r = new Record();
+            
             Title.Print("Ежедневник");
             Console.Title = "Ежедневник 1.0";
-            Planner p = new();
-            p.Init();
+            Planner.Init();
             while (!isExit)
             {
                 var actConsoleColor = Console.ForegroundColor;
+                Console.Clear();
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.DarkCyan;
                 Console.WriteLine("*ГЛАВНОЕ МЕНЮ*");
                 Console.ForegroundColor = actConsoleColor;
                 Console.WriteLine();
-                Console.WriteLine("Сделайте выбор:\n  1. Создание записи \n  2. Редактирование записи\n  3. Удаление записи" +
-                    "\n  4. Настройки\n  5. Для выхода нажмите любую другую клавишу...");
+                Console.WriteLine("Сделайте выбор:\n  1. Создание записи \n  2. Действия с записями" +
+                    "\n  3. Настройки\n  4. Для выхода нажмите любую другую клавишу...");
                 userAnswer = Console.ReadLine();
                 switch (userAnswer)
                 {
                     case "1":
-                        Console.WriteLine("Выбор 1 варианта!");
+                        CreateRecPage.Show();
                         break;
                     case "2":
-                        Console.WriteLine("Выбор 2 варианта!");
+                        ActionRecPage.Show();
                         break;
                     case "3":
-                        Console.WriteLine("Выбор 3 варианта!");
-                        break;
-                    case "4":
                         SettingsPage.Show();
                         break;
                     default:
@@ -56,7 +54,7 @@ namespace ConsoleApp1
                 "хранят дневники для себя. \nОни хранят их для других как секрет, о котором не хочется рассказывать, но при этом хочется, " +
                 "чтобы о нем знали все. \nЕдинственный надежный сейф - твоя собственная память, в которую никто не может залезть без твоего " +
                 "ведома.", "Опасность не в том, что компьютер однажды начнет мыслить, как человек, а в том," +
-                " что человек однажды начнет мыслить, как компьютер.", "Дневники и техника дойдет до такого совершенства, что человек " +
+                " что человек однажды начнет мыслить, как компьютер.", "Дневники и техника дойдут до такого совершенства, что человек " +
                 "сможет обойтись без себя."};
 
             Random r = new Random();

@@ -17,6 +17,7 @@ namespace ConsoleApp1
             while (!isExit)
             {
                 var actConsoleColor = Console.ForegroundColor;
+                Console.Clear();
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.DarkCyan;
                 Console.WriteLine("*НАСТРОЙКИ*");

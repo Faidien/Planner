@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp1
 {
-    class DelRecPage
+    class Repository
     {
+        public Record[] records;
+        public Repository(params Record[] args)
+        {
+            records = args;
+        }
     }
 }

@@ -7,6 +7,7 @@ namespace ConsoleApp1
     class Program
     {
         static bool isBlackThemeOn = true;
+        static bool isShowRec = false;
         static bool isExit = false;
         static string userAnswer = "";
         static string path = Directory.GetCurrentDirectory() + @"\data.txt";
@@ -23,6 +24,8 @@ namespace ConsoleApp1
                 ConsoleHelp.PrintSubtitle("ГЛАВНОЕ МЕНЮ");
                 Console.WriteLine("Сделайте выбор:\n  1. Создание записи \n  2. Действия с записями" +
                     "\n  3. Настройки\n  4. Для выхода нажмите любую другую клавишу...");
+
+                ShowTodayLastRec(rp);
                 userAnswer = Console.ReadLine();
                 switch (userAnswer)
                 {
@@ -45,6 +48,31 @@ namespace ConsoleApp1
             }
             Exit(rp);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rp"></param>
+        private static void ShowTodayLastRec(Repository rp)
+        {
+            if (isShowRec)
+            {
+                Console.WriteLine("\n\n============================================");
+                Console.WriteLine("Последние записи на сегодня:");
+                DateTime n = new DateTime();
+                n = DateTime.Now;
+                for (int i = rp.records.Length - 1; i > rp.records.Length - 4; i--)
+                {
+                    if (rp.records[i].DataCreate.Day == n.Day)
+                    {
+                        Console.WriteLine("*************************************");
+                        rp.records[i].Print();
+                        Console.WriteLine();
+                    }
+                }
+                Console.WriteLine("============================================");
+
+            }
+        }
 
         /// <summary>
         /// Страница с настройками
@@ -54,7 +82,8 @@ namespace ConsoleApp1
             while (!isExit)
             {
                 ConsoleHelp.PrintSubtitle("НАСТРОЙКИ");
-                Console.WriteLine($"Сделайте выбор:\n  1. Темная тема({GetThemeStatus()}) \n  2. Показывать записи на сегодня(выключено)" +
+                Console.WriteLine($"Сделайте выбор:\n  1. Темная тема({GetThemeStatus()}) \n " +
+                    $" 2. Показывать записи на сегодня({GetShowTodayRecStatus()})" +
                     "\n  3. Для выхода в главное меню нажмите любую другую клавишу...");
                 userAnswer = Console.ReadLine();
                 switch (userAnswer)
@@ -63,7 +92,7 @@ namespace ConsoleApp1
                         ChaneConsoleTheme();
                         break;
                     case "2":
-                        Console.WriteLine("Выбор 2 варианта!");
+                        ChangeShowRec();
                         break;
                     default:
                         isExit = true;
@@ -71,9 +100,25 @@ namespace ConsoleApp1
                 }
             }
         }
+        /// <summary>
+        /// Изменение состояния флага Показ записей
+        /// </summary>
+        private static void ChangeShowRec()
+        {
+            isShowRec = !isShowRec;
+        }
 
         /// <summary>
-        /// Смена темы консоли
+        /// Отображение статуса показа записи в настройках. По умолчанию выключено
+        /// </summary>
+        /// <returns></returns>
+        private static object GetShowTodayRecStatus()
+        {
+            return isShowRec ? "включено" : "выключено";
+        }
+
+        /// <summary>
+        /// Включает выключает темную тему
         /// </summary>
         private static void ChaneConsoleTheme()
         {
@@ -102,7 +147,7 @@ namespace ConsoleApp1
         }
 
         /// <summary>
-        /// Получение состояния флага "темная тема" - вкл или выкл
+        /// Отображение статуса темной темы. По умолчанию включено
         /// </summary>
         /// <returns></returns>
         private static string GetThemeStatus()

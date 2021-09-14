@@ -9,7 +9,7 @@ namespace ConsoleApp1
     struct Record
     {
         public uint ID { get; private set; }
-        public string Title { get;  set; }
+        public string Title { get; set; }
         public string Text { get; set; }
         public DateTime DataCreate { get; private set; }
         public int Importance { get; set; } // Приоритетность
@@ -31,15 +31,14 @@ namespace ConsoleApp1
 
         public void Print()
         {
-            Console.WriteLine("Была создана запись: ");
             Console.WriteLine($" 1. Номер записи: {ID}.\n 2. Заголовок записи: {Title}.\n 3. Текст записи: {Text}.\n" +
-                $" 4. Дата создания записи: {DataCreate.ToShortDateString()}.\n" +
+                $" 4. Дата создания записи: {DataCreate.ToShortDateString()} {DataCreate.ToShortTimeString()}.\n" +
                 $" 5. Важность записи: {Importance} ");
         }
 
         public string Save()
         {
-            string s = $"{ID},{Title},{Text},{Importance},{DataCreate.ToShortDateString()}";
+            string s = $"{ID},{Title},{Text},{Importance},{DataCreate.ToShortDateString()} {DataCreate.ToShortTimeString()}";
             return s;
         }
 

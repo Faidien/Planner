@@ -31,8 +31,9 @@ namespace ConsoleApp1
             while (!isExit)
             {
                 ConsoleHelp.PrintSubtitle("ГЛАВНОЕ МЕНЮ");
-                Console.WriteLine("Сделайте выбор:\n  1. Создание записи \n  2. Действия с записями" +
-                    "\n  3. Настройки\n  4. Для выхода нажмите любую другую клавишу...");
+                Console.WriteLine("Сделайте выбор:\n  1. Создание записи\n  2. Выборка записей" +
+                    "\n  3. Действия с записями" +
+                    "\n  4. Настройки\n  5. Для выхода нажмите любую другую клавишу...");
 
                 ShowTodayLastRec(rp);
                 userAnswer = Console.ReadLine();
@@ -41,12 +42,18 @@ namespace ConsoleApp1
                     case "1":
                         CreatePage(rp);// "Показывает" страницу с созданием записей
                         isExit = false;
+                        rp.SaveAllRec();
                         break;
                     case "2":
-                        ActionPage(rp); // "Показывает" страницу с действиями над записью
+                        ChoosePage(rp); // "Показывает" страницу с опциями выборки записей
                         isExit = false;
+                        rp.SaveAllRec();
                         break;
                     case "3":
+                        ActionPage(rp); // ""Показывает" страницу с действиями над записью
+                        isExit = false;
+                        break;
+                    case "4":
                         SettingsPage(); // "Показывает" страницу настроек
                         isExit = false;
                         break;
@@ -69,26 +76,35 @@ namespace ConsoleApp1
                 Console.WriteLine("\n\n============================================");
                 Console.WriteLine("Последние записи на сегодня:");
                 DateTime n = new DateTime();
-                int countRec = rp.records.Length - 1;
-                n = DateTime.Now;
-                for (int i = 0; i < 3; i++)
+                if (rp.records.Length != 0)
                 {
-                    if (rp.records[countRec].ID != 0)
+                    int countRec = rp.records.Length - 1;
+                    int len = rp.records.Length < 3 ? rp.records.Length : 3;
+                    n = DateTime.Now;
+                    for (int i = 0; i < len; i++)
                     {
-                        if (rp.records[countRec].DataCreate.Day == n.Day)
+                        if (countRec <= -1)
                         {
-                            Console.WriteLine("*************************************");
-                            rp.records[countRec--].Print(1);
-                            Console.WriteLine();
+                            //Console.WriteLine("Нет записей!");
+                            break;
                         }
-                    }
-                    else
-                    {
-                        countRec--;
-                        i--;
-                    }
+                        if (rp.records[countRec].ID != 0)
+                        {
+                            if (rp.records[countRec].DataCreate.Day == n.Day)
+                            {
+                                rp.records[countRec--].Print(1);
+                            }
+                        }
+                        else
+                        {
+                            countRec--;
 
+                            i--;
+                        }
+
+                    }
                 }
+
                 Console.WriteLine("============================================");
 
             }
@@ -212,8 +228,8 @@ namespace ConsoleApp1
             while (!isExit)
             {
                 ConsoleHelp.PrintSubtitle("ДЕЙСТВИЯ С ЗАПИСЯМИ");
-                Console.WriteLine($"Сделайте выбор:\n  1. Редактирование записи \n  2. Удаление записи\n  3. Выборка записей" +
-                    "\n  4. Для выхода в главное меню нажмите любую другую клавишу...");
+                Console.WriteLine($"Сделайте выбор:\n  1. Редактирование записи \n  2. Удаление записи" +
+                    "\n  3. Для выхода в главное меню нажмите любую другую клавишу...");
                 userAnswer = Console.ReadLine();
                 switch (userAnswer)
                 {
@@ -222,9 +238,6 @@ namespace ConsoleApp1
                         break;
                     case "2":
                         rp.DeleteRec();
-                        break;
-                    case "3":
-                        Console.WriteLine("Выбор 3 варианта!");
                         break;
                     default:
                         isExit = true;
@@ -257,6 +270,41 @@ namespace ConsoleApp1
             Console.WriteLine(byeSentence[r.Next(byeSentence.Length)]);
 
             Environment.Exit(0);
+        }
+
+        /// <summary>
+        /// Страница выборки записей
+        /// </summary>
+        /// <param name="rp"></param>
+        public static void ChoosePage(Repository rp)
+        {
+            while (!isExit)
+            {
+                ConsoleHelp.PrintSubtitle("ВЫБОР ЗАПИСИ(-ЕЙ)");
+                Console.WriteLine($"Сделайте выбор:\n  1. Выбор записи по дате(краткий формат) \n  " +
+                    $"2. Выбор записи по номеру(краткий формат)" +
+                    "\n  3. Выбор записи по дате(полный вывод)\n  4. Выбор записи по номеру(полный вывод)" +
+                    "\n  5. Для выхода в главное меню нажмите любую другую клавишу...");
+                userAnswer = Console.ReadLine();
+                switch (userAnswer)
+                {
+                    case "1":
+                        rp.ChooseRecs(1, "short");// по дате, короткий формат
+                        break;
+                    case "2":
+                        rp.ChooseRecs(2, "short");// по ид, короткий формат
+                        break;
+                    case "3":
+                        rp.ChooseRecs(1, "full");// по дате, полный формат
+                        break;
+                    case "4":
+                        rp.ChooseRecs(2, "full");// по ид, полный формат
+                        break;
+                    default:
+                        isExit = true;
+                        break;
+                }
+            }
         }
     }
 }

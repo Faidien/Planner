@@ -29,6 +29,11 @@ namespace ConsoleApp1
         public uint id;
 
         /// <summary>
+        /// Флаг найдена ли запись или нет
+        /// </summary>
+        public bool isFind;
+
+        /// <summary>
         /// Получить макс ИД записи
         /// </summary>
         /// <param name="arr"></param>
@@ -145,7 +150,7 @@ namespace ConsoleApp1
         }
 
         /// <summary>
-        /// Создание записи, загрузка записи в массив
+        /// Создание записи -1, генерация записи - 2, загрузка записи в массив
         /// </summary>
         /// <param name="mode"></param>
         public void CreateRec(int mode)
@@ -159,8 +164,7 @@ namespace ConsoleApp1
                     Console.Write("Введите приоритет записи: ");
                     int.TryParse(Console.ReadLine(), out int priority);
                     Add(new Record(id++, text, CheckPriority(priority)));
-                    Console.Write("\nЗапись создана!");
-                    Console.ReadLine();
+                    Footer("создана!", true);
                     break;
                 case 2:
                     // PC gen mode
@@ -168,22 +172,22 @@ namespace ConsoleApp1
                     string[] sentense = { "Достал.", "Работа - это такое место, где с утра хочется есть, " +
                             "после обеда - спать, и все время такое чувство, что пора домой.","Скажи мне, кто твой враг," +
                             "и я скажу тебе, где достать патроны дешевле", "Мне нравится работать программистом по своему" +
-                            "графику. \nЗахотел - пришел на работу к 7 часам утра. \nЗахотел - ушел в 12 ночи." +
-                            "А захотел - вообще домой не пошел! \n", "Не волнуйтесь, если что-то не работает. " +
-                            "Если бы всё работало, вас бы уволили.", "В теории, теория и практика неразделимы. \n" +
+                            "графику. Захотел - пришел на работу к 7 часам утра. Захотел - ушел в 12 ночи." +
+                            "А захотел - вообще домой не пошел! ", "Не волнуйтесь, если что-то не работает. " +
+                            "Если бы всё работало, вас бы уволили.", "В теории, теория и практика неразделимы." +
                             "На практике это не так.", "Иногда лучше остаться спать дома в понедельник, " +
                             "чем провести всю неделю в отладке написанного в понедельник кода.","Многие из вас " +
-                            "знакомы с достоинствами программиста. \nИх всего три, и разумеется это: лень, " +
-                            "нетерпеливость и гордыня.","Если вы дадите человеку программу, то займете его на один день. \n" +
+                            "знакомы с достоинствами программиста. Их всего три, и разумеется это: лень, " +
+                            "нетерпеливость и гордыня.","Если вы дадите человеку программу, то займете его на один день. " +
                             "Если вы научите человека программировать, то займете его на всю жизнь.",
                             "Отладка кода — это как охота. Охота на баги.","Работает? Не трогай.",
                             "Насколько проще было бы писать программы, если бы не заказчики.",
                             "Молодые специалисты не умеют работать, а опытные специалисты умеют не работать.",
                             "Чтобы написать чистый код, мы сначала пишем грязный код, а затем рефакторим его.",
                             "Тестирование не позволяет обнаружить такие ошибки, как создание не того приложения.",
-                            "Сначала учите науку программирования и всю теорию.\n " +
+                            "Сначала учите науку программирования и всю теорию. " +
                             "Далее выработайте свой программистский стиль. Затем забудьте всё и просто программируйте.",
-                            "Люди думают, что безопасность — это существительное, что-то, что можно купить.\n" +
+                            "Люди думают, что безопасность — это существительное, что-то, что можно купить." +
                             "На самом же деле безопасность — это абстрактное понятие, как счастье.",
                             "Чтобы понять алгоритм, нужно его увидеть.","Программы становятся медленнее быстрее, " +
                             "чем «железо» становится быстрее.","Магия перестаёт существовать после того, " +
@@ -192,12 +196,92 @@ namespace ConsoleApp1
                     string textC = sentense[r.Next(sentense.Length)];
                     Add(new Record(id++, textC, CheckPriority(8)));
                     Console.WriteLine($"Текст сгенерированной записи: {textC}");
-                    Console.Write("\nЗапись создана!");
-                    Console.ReadLine();
+                    Footer("сгенерирована!", true);
                     break;
                 default:
                     break;
             }
+        }
+
+        /// <summary>
+        /// Выборка записей. Есть два режима: 1 - по дате, 2 - по ид, 
+        /// и два формата вывода:  full - полный, short = короткий
+        /// </summary>
+        internal void ChooseRecs(int mode, string format)
+        {
+            DateTime startDate, endDate;
+            switch (mode)
+            {
+                case 1:
+                    Console.WriteLine("Если нужно вывести все записи, оставьте поля ввода пустыми.");
+                    Console.Write("Введите начальную дату: ");
+                    DateTime.TryParse(Console.ReadLine(), out startDate);
+                    Console.Write("Введите конечную дату: ");
+                    DateTime.TryParse(Console.ReadLine(), out endDate);
+
+                    Console.WriteLine("\n\n============================================");
+                    Console.WriteLine("Записи за выбранные даты:");
+                    foreach (var item in records)
+                    {
+                        if (item.ID != 0)
+                        {
+                            if (endDate == default || startDate == default)
+                            {
+                                if (format == "short")
+                                    item.Print(1);
+                                else
+                                    item.Print();
+                                isFind = true;
+                            }
+                            else if (item.DataCreate <= endDate && item.DataCreate >= startDate)
+                            {
+                                if (format == "short")
+                                    item.Print(1);
+                                else
+                                    item.Print();
+                                isFind = true;
+                            }
+                            else
+                            {
+                                isFind = false;
+                            }
+                        }
+                    }
+                    Console.WriteLine("\n\n============================================");
+                    Footer("выбрана(-ы)!", isFind);
+                    break;
+
+                case 2:
+                    Console.WriteLine("Вывод записей по номеру.");
+                    Console.Write("Введите номер записи: ");
+                    uint.TryParse(Console.ReadLine(), out uint ID);
+
+                    Console.WriteLine("\n\n============================================");
+                    Console.WriteLine($"Запись по номеру {ID}:");
+                    foreach (var item in records)
+                    {
+                        if (item.ID != 0 && item.ID == ID)
+                        {
+                            if (format == "short")
+                                item.Print(1);
+                            else
+                                item.Print();
+                            isFind = true;
+                            break;
+                        }
+                        else
+                        {
+                            isFind = false;
+                        }
+                    }
+
+                    Console.WriteLine("\n\n============================================");
+                    Footer("выбрана(-ы)!", isFind);
+                    break;
+                default:
+                    break;
+            }
+
         }
 
         /// <summary>
@@ -252,16 +336,27 @@ namespace ConsoleApp1
         /// </summary>
         public void DeleteRec()
         {
+
             Console.Write("Введите номер записи для удаления: ");
             uint.TryParse(Console.ReadLine(), out uint recForDel);
             for (int i = 0; i < records.Length; i++)
             {
-                if (records[i].ID == recForDel)
+                if (records[i].ID != 0)
                 {
-                    records[i] = new Record();
+                    if (records[i].ID == recForDel)
+                    {
+                        records[i] = new Record();
+                        isFind = true;
+                        break;
+                    }
+                    else
+                    {
+                        isFind = false;
+                    }
                 }
+
             }
-            Console.WriteLine("\nЗапись удалена!");
+            Footer("удалена!", isFind);
         }
 
         /// <summary>
@@ -273,22 +368,54 @@ namespace ConsoleApp1
             uint.TryParse(Console.ReadLine(), out uint recForEdit);
             for (int i = 0; i < records.Length; i++)
             {
-                if (records[i].ID == recForEdit)
+                if (records[i].ID != 0)
                 {
-                    string newText = "";
-                    Console.WriteLine($"Старый текст записи: {records[i].Text}");
-                    Console.WriteLine($"Старый приоритет записи: {records[i].Importance}");
-                    Console.Write("Введите новый текст для записи:");
-                    newText = Console.ReadLine();
-                    Console.Write("Введите новый приоритет для записи:");
-                    int.TryParse(Console.ReadLine(), out int newPriority);
-                    records[i].Text = newText;
-                    records[i].Importance = CheckPriority(newPriority);
-                    records[i].Title = (records[i].Text.IndexOf(" ") == -1) ?
-                        records[i].Text : records[i].Text.Substring(0, records[i].Text.IndexOf(" ")) + "...";
+                    if (records[i].ID == recForEdit)
+                    {
+                        string newText = "";
+                        Console.WriteLine($"Старый текст записи: {records[i].Text}");
+                        Console.WriteLine($"Старый приоритет записи: {records[i].Importance}");
+                        Console.Write("Введите новый текст для записи:");
+                        newText = Console.ReadLine();
+                        Console.Write("Введите новый приоритет для записи:");
+                        int.TryParse(Console.ReadLine(), out int newPriority);
+                        records[i].Text = newText;
+                        records[i].Importance = CheckPriority(newPriority);
+                        records[i].Title = (records[i].Text.IndexOf(" ") == -1) ?
+                            records[i].Text : records[i].Text.Substring(0, records[i].Text.IndexOf(" ")) + "...";
+                        isFind = true;
+                        break;
+                    }
+                    else
+                    {
+                        isFind = false;
+                    }
                 }
+
             }
-            Console.WriteLine("\nЗапись отредактирована!");
+            Footer("отредактирована!", isFind);
+
+        }
+
+        /// <summary>
+        /// Вывод в конце операций
+        /// </summary>
+        /// <param name="text"></param>
+        private void Footer(string text, bool isFind)
+        {
+            if (isFind)
+            {
+                Console.WriteLine($"\nЗапись {text}.\n" +
+                $"Для продолжения нажмите Enter");
+                Console.ReadLine();
+            }
+            else
+            {
+                Console.WriteLine("Запись не найдена!\n" +
+                $"Для продолжения нажмите Enter");
+                Console.ReadLine();
+            }
+
         }
     }
 }

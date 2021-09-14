@@ -10,7 +10,7 @@ namespace ConsoleApp1
         static bool isBlackThemeOn = true;
 
         //Флаг отображения последних записей в гл меню
-        static bool isShowRec = false;
+        static bool isShowRec = true;
 
         //Флаг выхода из цикла.
         static bool isExit = false;

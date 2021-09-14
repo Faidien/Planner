@@ -11,7 +11,7 @@ namespace ConsoleApp1
         /// <summary>
         /// ИД записи - порядковые номера от 1. При удалении не сдвигаются номера.
         /// </summary>
-        public uint ID { get;  set; }
+        public uint ID { get; set; }
 
         /// <summary>
         /// Заглавие записи - первое слово записи для "короткого" вывода в консоль
@@ -26,12 +26,12 @@ namespace ConsoleApp1
         /// <summary>
         /// Дата и время создания записи
         /// </summary>
-        public DateTime DataCreate { get;  set; }
+        public DateTime DataCreate { get; set; }
 
         /// <summary>
         /// Приоритетность записи. Возможно в дневник будут записываться дела, и нужно будет их различать по важности
         /// </summary>
-        public int Importance { get; set; } 
+        public int Importance { get; set; }
 
         /// <summary>
         /// Конструктор для введения пользователем инфы
@@ -67,7 +67,7 @@ namespace ConsoleApp1
         public void Print()
         {
             Console.WriteLine($" 1. Номер записи: {ID}.\n 2. Заголовок записи: {Title}.\n 3. Текст записи: {Text}.\n" +
-                $" 4. Дата создания записи: {DataCreate.ToShortDateString()} {DataCreate.ToShortTimeString()}.\n" +
+                $" 4. Дата создания записи: {DataCreate}.\n" +
                 $" 5. Важность записи: {Importance}");
         }
 
@@ -78,8 +78,8 @@ namespace ConsoleApp1
         public void Print(int mode)
         {
             Console.WriteLine($"  1. Номер записи: {ID}.\n  2. Заголовок записи: {Title}.\n" +
-                $"  3. Дата создания записи: {DataCreate.ToShortDateString()}.\n  4. Дата создания записи: {DataCreate.ToShortTimeString()}.\n" +
-                $"   5. Важность записи: {Importance}");
+                $"  3. Дата и время создания записи: {DataCreate}.\n" +
+                $"  5. Важность записи: {Importance}");
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace ConsoleApp1
         /// <returns></returns>
         public string Save()
         {
-            string s = $"{ID}~{Title}~{Text}~{Importance}~{DataCreate.ToShortDateString()} {DataCreate.ToShortTimeString()}";
+            string s = $"{ID}~{Title}~{Text}~{Importance}~{DataCreate}";
             return s;
         }
     }

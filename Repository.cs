@@ -22,14 +22,6 @@ namespace ConsoleApp1
             id = maxID + 1;
         }
 
-        private void WriteToBase(Record rc)
-        {
-            using (StreamWriter sw = new StreamWriter(File.Open(path, FileMode.Append, FileAccess.Write), Encoding.Unicode))
-            {
-                sw.WriteLine(rc.ToSave());
-            }
-        }
-
         public void CreateBase(string path)
         {
 
@@ -91,7 +83,8 @@ namespace ConsoleApp1
                 Console.Write("Файл найден, выполняю загрузку...");
                 ConsoleHelp.Turn(r.Next(8, 16));
                 OpenBase(path);
-                Console.WriteLine();
+                Console.Write("База данных успешно загружена. \nНажмите Enter для входа в программу.");
+                Console.ReadLine();
             }
 
             else
@@ -119,7 +112,7 @@ namespace ConsoleApp1
                     string text = Console.ReadLine();
                     Console.Write("Введите приоритет записи: ");
                     int.TryParse(Console.ReadLine(), out int priority);
-                    Add(new Record(id++, text, priority));
+                    Add(new Record(id++, text, CheckPriority(priority)));
                     Console.WriteLine("Human input mode");
                     Console.ReadLine();
                     break;
@@ -132,6 +125,23 @@ namespace ConsoleApp1
                     break;
             }
         }
+        /// <summary>
+        /// Проверка на валидность введного приоритета. Если не валиден - то по умолчанию приоритет будет 1
+        /// </summary>
+        /// <param name="priority"></param>
+        /// <returns></returns>
+        private int CheckPriority(int priority)
+        {
+            if (priority < 0 && priority > 8)
+            {
+                return 1;
+            }
+            else
+            {
+                return priority;
+            }
+        }
+
         public Repository(string path)
         {
             this.id = 0;
@@ -141,7 +151,7 @@ namespace ConsoleApp1
             Init();
         }
 
-        public void Save()
+        public void SaveAllRec()
         {
             using (StreamWriter sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write), Encoding.Unicode))
             {
@@ -149,8 +159,44 @@ namespace ConsoleApp1
                 {
                     if (item.ID != 0)
                     {
-                        sw.WriteLine(item.ToSave());
+                        sw.WriteLine(item.Save());
                     }
+                }
+            }
+        }
+
+        public void DeleteRec()
+        {
+            Console.Write("Введите номер записи для удаления: ");
+            uint.TryParse(Console.ReadLine(), out uint recForDel);
+            for (int i = 0; i < records.Length; i++)
+            {
+                if (records[i].ID == recForDel)
+                {
+                    records[i] = new Record();
+                }
+            }
+        }
+
+        public void EditRec()
+        {
+            Console.Write("Введите номер записи для редактирования: ");
+            uint.TryParse(Console.ReadLine(), out uint recForEdit);
+            for (int i = 0; i < records.Length; i++)
+            {
+                if (records[i].ID == recForEdit)
+                {
+                    string newText = "";
+                    Console.WriteLine($"Старый текст записи: {records[i].Text}");
+                    Console.WriteLine($"Старый приоритет записи: {records[i].Importance}");
+                    Console.Write("Введите новый текст для записи:");
+                    newText = Console.ReadLine();
+                    Console.Write("Введите новый приоритет для записи:");
+                    int.TryParse(Console.ReadLine(), out int newPriority);
+                    records[i].Text = newText;
+                    records[i].Importance = CheckPriority(newPriority);
+                    records[i].Title = (records[i].Text.IndexOf(" ") == -1) ?
+                        records[i].Text : records[i].Text.Substring(0, records[i].Text.IndexOf(" ")) + "...";
                 }
             }
         }

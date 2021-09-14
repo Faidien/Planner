@@ -18,7 +18,6 @@ namespace ConsoleApp1
         {
             Console.Title = "Ежедневник 1.5";
             Repository rp = new Repository(path);
-            Console.ReadLine();
             while (!isExit)
             {
                 ConsoleHelp.PrintSubtitle("ГЛАВНОЕ МЕНЮ");
@@ -153,10 +152,10 @@ namespace ConsoleApp1
                 switch (userAnswer)
                 {
                     case "1":
-                        Console.WriteLine("Выбор 1 варианта!");
+                        rp.EditRec();
                         break;
                     case "2":
-                        Console.WriteLine("Выбор 2 варианта!");
+                        rp.DeleteRec();
                         break;
                     case "3":
                         Console.WriteLine("Выбор 3 варианта!");
@@ -175,7 +174,7 @@ namespace ConsoleApp1
         {
             if (rp != null)
             {
-                rp.Save();
+                rp.SaveAllRec();
             }
 
 

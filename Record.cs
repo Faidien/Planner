@@ -9,7 +9,7 @@ namespace ConsoleApp1
     struct Record
     {
         public uint ID { get; private set; }
-        public string Title { get; private set; }
+        public string Title { get;  set; }
         public string Text { get; set; }
         public DateTime DataCreate { get; private set; }
         public int Importance { get; set; } // Приоритетность
@@ -17,7 +17,7 @@ namespace ConsoleApp1
 
         public Record(uint id, string text, int importance) : this(id, "", text, importance, DateTime.Now)
         {
-            this.Title = (text.IndexOf(" ") == -1) ? text  : text.Substring(0, text.IndexOf(" ")) + "...";
+            this.Title = (text.IndexOf(" ") == -1) ? text : text.Substring(0, text.IndexOf(" ")) + "...";
         }
 
         public Record(uint id, string title, string text, int importance, DateTime dateCreate)
@@ -37,10 +37,18 @@ namespace ConsoleApp1
                 $" 5. Важность записи: {Importance} ");
         }
 
-        public string ToSave()
+        public string Save()
         {
-            string s = $"{ID}, {Title}, {Text},{Importance},{DataCreate.ToShortDateString()}";
+            string s = $"{ID},{Title},{Text},{Importance},{DataCreate.ToShortDateString()}";
             return s;
         }
+
+        //public void Delete(Record rec, uint DeleteID)
+        //{
+        //    if (rec.ID == DeleteID)
+        //    {
+        //        rec = new Record();
+        //    }
+        //}
     }
 }

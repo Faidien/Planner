@@ -76,31 +76,24 @@ namespace ConsoleApp1
                 Console.WriteLine("\n\n============================================");
                 Console.WriteLine("Последние записи на сегодня:");
                 DateTime n = new DateTime();
-                if (rp.records.Length != 0)
+                int countRec = rp.records.Length - 1;
+                n = DateTime.Now;
+                for (int i = 0; i < 3; i++)
                 {
-                    int countRec = rp.records.Length - 1;
-                    int len = rp.records.Length < 3 ? rp.records.Length : 3;
-                    n = DateTime.Now;
-                    for (int i = 0; i < len; i++)
+                    if (rp.records[countRec].ID != 0)
                     {
-                        if (countRec <= -1)
+                        if (rp.records[countRec].DataCreate.Day == n.Day)
                         {
-                            //Console.WriteLine("Нет записей!");
-                            break;
+                            Console.WriteLine("*************************************");
+                            rp.records[countRec--].Print(1);
+                            Console.WriteLine();
                         }
-                        if (rp.records[countRec].ID != 0)
-                        {
-                            if (rp.records[countRec].DataCreate.Day == n.Day)
-                            {
-                                rp.records[countRec--].Print(1);
-                            }
-                        }
-                        else
-                        {
-                            countRec--;
-
-                            i--;
-                        }
+                    }
+                    else
+                    {
+                        countRec--;
+                        i--;
+                    }
 
                     }
                 }

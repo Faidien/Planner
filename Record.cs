@@ -8,21 +8,27 @@ namespace ConsoleApp1
 {
     struct Record
     {
-        public uint ID {  get; set; }
-        public string Title { get; set; }
-        public string Text {  get; set; }
-        public DateTime DataCreate {  get; set; }
-        public int Importance { get; set; }
+        public uint ID { get; private set; }
+        public string Title { get; private set; }
+        public string Text { get; set; }
+        public DateTime DataCreate { get; private set; }
+        public int Importance { get; set; } // Приоритетность
 
 
-        //public Record(string text, int importance)
-        //{
-        //    this.ID = 1;
-        //    this.Text = text;
-        //    this.Title = text.Substring(0, text.IndexOf(" ")) + "...";
-        //    this.DataCreate = DateTime.Now;
-        //    this.Importance = importance;
-        //}
+        public Record(uint id, string text, int importance) : this(id, "", text, importance, DateTime.Now)
+        {
+            this.Title = (text.IndexOf(" ") == -1) ? text  : text.Substring(0, text.IndexOf(" ")) + "...";
+        }
+
+        public Record(uint id, string title, string text, int importance, DateTime dateCreate)
+        {
+            this.ID = id;
+            this.Title = title;
+            this.Text = text;
+            this.Importance = importance;
+            this.DataCreate = dateCreate;
+        }
+
         public void Print()
         {
             Console.WriteLine("Была создана запись: ");

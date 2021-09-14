@@ -12,6 +12,10 @@ namespace ConsoleApp1
         private string path;
         public uint id;// Порядковый номер записи. По идее должен инрементироваться. Последний номер должен браться из файла, если таковой есть
                        // Если файла нет - запись будет первой. 
+        /// <summary>
+        /// Получить макс ИД записи
+        /// </summary>
+        /// <param name="arr"></param>
         public void GetID(Record[] arr)
         {
             uint maxID = 0;
@@ -22,6 +26,10 @@ namespace ConsoleApp1
             id = maxID + 1;
         }
 
+        /// <summary>
+        /// Создание БД для записей в случае если файла нет
+        /// </summary>
+        /// <param name="path"></param>
         public void CreateBase(string path)
         {
 
@@ -29,12 +37,22 @@ namespace ConsoleApp1
             {
             }
         }
+
+        /// <summary>
+        /// Добавление записи к массиву
+        /// </summary>
+        /// <param name="rec"></param>
         public void Add(Record rec)
         {
             this.Resize(index >= this.records.Length);
             this.records[index] = rec;
             this.index++;
         }
+
+        /// <summary>
+        /// Изменение размера массива, если след запись не лезет в текущую размерность
+        /// </summary>
+        /// <param name="Flag"></param>
         private void Resize(bool Flag)
         {
             if (Flag)
@@ -43,6 +61,10 @@ namespace ConsoleApp1
             }
         }
 
+        /// <summary>
+        /// Открыть БД, прочитать все строки, добавитьь в репозиторий.
+        /// </summary>
+        /// <param name="path"></param>
         public void OpenBase(string path)
         {
             string[] args;
@@ -55,8 +77,9 @@ namespace ConsoleApp1
 
                     while (!sr.EndOfStream)
                     {
-                        args = sr.ReadLine().Split(',');
-                        Add(new Record(Convert.ToUInt32(args[0]), args[1], args[2], Convert.ToInt32(args[3]), Convert.ToDateTime(args[4])));
+                        args = sr.ReadLine().Split('~');
+                        if (args != null)
+                            Add(new Record(Convert.ToUInt32(args[0]), args[1], args[2], Convert.ToInt32(args[3]), Convert.ToDateTime(args[4])));
                     }
                 }
             }
@@ -70,6 +93,9 @@ namespace ConsoleApp1
             GetID(records);
         }
 
+        /// <summary>
+        /// Инициализация репозитория, проверка существования файла, управление методами создать и открыть БД
+        /// </summary>
         public void Init()
         {
 
@@ -102,6 +128,10 @@ namespace ConsoleApp1
             }
         }
 
+        /// <summary>
+        /// Создание записи, загрузка записи в массив
+        /// </summary>
+        /// <param name="mode"></param>
         public void CreateRec(int mode)
         {
             switch (mode)
@@ -125,6 +155,7 @@ namespace ConsoleApp1
                     break;
             }
         }
+
         /// <summary>
         /// Проверка на валидность введного приоритета. Если не валиден - то по умолчанию приоритет будет 1
         /// </summary>
@@ -142,6 +173,10 @@ namespace ConsoleApp1
             }
         }
 
+        /// <summary>
+        /// Стандартный конструктор, инициализация переменных и репозитория
+        /// </summary>
+        /// <param name="path"></param>
         public Repository(string path)
         {
             this.id = 0;
@@ -151,6 +186,9 @@ namespace ConsoleApp1
             Init();
         }
 
+        /// <summary>
+        /// Запись всех записей на диск, в конце работы программы
+        /// </summary>
         public void SaveAllRec()
         {
             using (StreamWriter sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write), Encoding.Unicode))
@@ -165,6 +203,9 @@ namespace ConsoleApp1
             }
         }
 
+        /// <summary>
+        /// Удаление записи по ИД записи
+        /// </summary>
         public void DeleteRec()
         {
             Console.Write("Введите номер записи для удаления: ");
@@ -178,6 +219,9 @@ namespace ConsoleApp1
             }
         }
 
+        /// <summary>
+        /// Редактирование записи по ИД записи
+        /// </summary>
         public void EditRec()
         {
             Console.Write("Введите номер записи для редактирования: ");

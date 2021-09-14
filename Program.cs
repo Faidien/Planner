@@ -6,10 +6,19 @@ namespace ConsoleApp1
 {
     class Program
     {
+        //Флаг темной темы
         static bool isBlackThemeOn = true;
+
+        //Флаг отображения последних записей в гл меню
         static bool isShowRec = false;
+
+        //Флаг выхода из цикла.
         static bool isExit = false;
+
+        //Ответ юзера на запрос о вводе
         static string userAnswer = "";
+
+        //Путь к файлу - файл будет создан\считан в папке с исходной программой
         static string path = Directory.GetCurrentDirectory() + @"\data.txt";
 
         /// <summary>
@@ -48,8 +57,9 @@ namespace ConsoleApp1
             }
             Exit(rp);
         }
+
         /// <summary>
-        /// 
+        /// Вывод записей в консоль
         /// </summary>
         /// <param name="rp"></param>
         private static void ShowTodayLastRec(Repository rp)
@@ -59,15 +69,25 @@ namespace ConsoleApp1
                 Console.WriteLine("\n\n============================================");
                 Console.WriteLine("Последние записи на сегодня:");
                 DateTime n = new DateTime();
+                int countRec = rp.records.Length - 1;
                 n = DateTime.Now;
-                for (int i = rp.records.Length - 1; i > rp.records.Length - 4; i--)
+                for (int i = 0; i < 3; i++)
                 {
-                    if (rp.records[i].DataCreate.Day == n.Day)
+                    if (rp.records[countRec].ID != 0)
                     {
-                        Console.WriteLine("*************************************");
-                        rp.records[i].Print();
-                        Console.WriteLine();
+                        if (rp.records[countRec].DataCreate.Day == n.Day)
+                        {
+                            Console.WriteLine("*************************************");
+                            rp.records[countRec--].Print(1);
+                            Console.WriteLine();
+                        }
                     }
+                    else
+                    {
+                        countRec--;
+                        i--;
+                    }
+
                 }
                 Console.WriteLine("============================================");
 
@@ -100,6 +120,7 @@ namespace ConsoleApp1
                 }
             }
         }
+
         /// <summary>
         /// Изменение состояния флага Показ записей
         /// </summary>

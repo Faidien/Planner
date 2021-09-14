@@ -8,18 +8,50 @@ namespace ConsoleApp1
 {
     struct Record
     {
-        public uint ID { get; private set; }
+        /// <summary>
+        /// ИД записи - порядковые номера от 1. При удалении не сдвигаются номера.
+        /// </summary>
+        public uint ID { get;  set; }
+
+        /// <summary>
+        /// Заглавие записи - первое слово записи для "короткого" вывода в консоль
+        /// </summary>
         public string Title { get; set; }
+
+        /// <summary>
+        /// Текст записи, полностью, без сокращений.
+        /// </summary>
         public string Text { get; set; }
-        public DateTime DataCreate { get; private set; }
-        public int Importance { get; set; } // Приоритетность
 
+        /// <summary>
+        /// Дата и время создания записи
+        /// </summary>
+        public DateTime DataCreate { get;  set; }
 
+        /// <summary>
+        /// Приоритетность записи. Возможно в дневник будут записываться дела, и нужно будет их различать по важности
+        /// </summary>
+        public int Importance { get; set; } 
+
+        /// <summary>
+        /// Конструктор для введения пользователем инфы
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="text"></param>
+        /// <param name="importance"></param>
         public Record(uint id, string text, int importance) : this(id, "", text, importance, DateTime.Now)
         {
             this.Title = (text.IndexOf(" ") == -1) ? text : text.Substring(0, text.IndexOf(" ")) + "...";
         }
 
+        /// <summary>
+        /// Стандарт конструктор
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="title"></param>
+        /// <param name="text"></param>
+        /// <param name="importance"></param>
+        /// <param name="dateCreate"></param>
         public Record(uint id, string title, string text, int importance, DateTime dateCreate)
         {
             this.ID = id;
@@ -29,25 +61,35 @@ namespace ConsoleApp1
             this.DataCreate = dateCreate;
         }
 
+        /// <summary>
+        /// Вывод в консоль всей инфы
+        /// </summary>
         public void Print()
         {
             Console.WriteLine($" 1. Номер записи: {ID}.\n 2. Заголовок записи: {Title}.\n 3. Текст записи: {Text}.\n" +
                 $" 4. Дата создания записи: {DataCreate.ToShortDateString()} {DataCreate.ToShortTimeString()}.\n" +
-                $" 5. Важность записи: {Importance} ");
+                $" 5. Важность записи: {Importance}");
         }
 
+        /// <summary>
+        /// Вывод в консоль инфы(для гл меню)
+        /// </summary>
+        /// <param name="mode"></param>
+        public void Print(int mode)
+        {
+            Console.WriteLine($"  1. Номер записи: {ID}.\n  2. Заголовок записи: {Title}.\n" +
+                $"  3. Дата создания записи: {DataCreate.ToShortDateString()}.\n  4. Дата создания записи: {DataCreate.ToShortTimeString()}.\n" +
+                $"   5. Важность записи: {Importance}");
+        }
+
+        /// <summary>
+        /// СОхранение записей в определенном формате.
+        /// </summary>
+        /// <returns></returns>
         public string Save()
         {
-            string s = $"{ID},{Title},{Text},{Importance},{DataCreate.ToShortDateString()} {DataCreate.ToShortTimeString()}";
+            string s = $"{ID}~{Title}~{Text}~{Importance}~{DataCreate.ToShortDateString()} {DataCreate.ToShortTimeString()}";
             return s;
         }
-
-        //public void Delete(Record rec, uint DeleteID)
-        //{
-        //    if (rec.ID == DeleteID)
-        //    {
-        //        rec = new Record();
-        //    }
-        //}
     }
 }

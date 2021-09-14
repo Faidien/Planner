@@ -66,9 +66,11 @@ namespace ConsoleApp1
         /// </summary>
         public void Print()
         {
+            Console.WriteLine("*************************************");
             Console.WriteLine($" 1. Номер записи: {ID}.\n 2. Заголовок записи: {Title}.\n 3. Текст записи: {Text}.\n" +
                 $" 4. Дата создания записи: {DataCreate}.\n" +
                 $" 5. Важность записи: {Importance}");
+            Console.WriteLine();
         }
 
         /// <summary>
@@ -77,9 +79,11 @@ namespace ConsoleApp1
         /// <param name="mode"></param>
         public void Print(int mode)
         {
+            Console.WriteLine("*************************************");
             Console.WriteLine($"  1. Номер записи: {ID}.\n  2. Заголовок записи: {Title}.\n" +
                 $"  3. Дата и время создания записи: {DataCreate}.\n" +
                 $"  5. Важность записи: {Importance}");
+            Console.WriteLine();
         }
 
         /// <summary>

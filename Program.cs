@@ -52,6 +52,7 @@ namespace ConsoleApp1
                     case "3":
                         ActionPage(rp); // ""Показывает" страницу с действиями над записью
                         isExit = false;
+                        rp.SaveAllRec();
                         break;
                     case "4":
                         SettingsPage(); // "Показывает" страницу настроек
@@ -77,9 +78,14 @@ namespace ConsoleApp1
                 Console.WriteLine("Последние записи на сегодня:");
                 DateTime n = new DateTime();
                 int countRec = rp.records.Length - 1;
+                int len = rp.records.Length < 3 ? rp.records.Length : 3;
                 n = DateTime.Now;
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < len; i++)
                 {
+                    if (countRec <= -1)
+                    {
+                        break;
+                    }
                     if (rp.records[countRec].ID != 0)
                     {
                         if (rp.records[countRec].DataCreate.Day == n.Day)
@@ -95,12 +101,11 @@ namespace ConsoleApp1
                         i--;
                     }
 
-                    }
                 }
-
-                Console.WriteLine("============================================");
-
             }
+
+            Console.WriteLine("============================================");
+
         }
 
         /// <summary>
@@ -222,7 +227,7 @@ namespace ConsoleApp1
             {
                 ConsoleHelp.PrintSubtitle("ДЕЙСТВИЯ С ЗАПИСЯМИ");
                 Console.WriteLine($"Сделайте выбор:\n  1. Редактирование записи \n  2. Удаление записи" +
-                    "\n  3. Для выхода в главное меню нажмите любую другую клавишу...");
+                    "\n  3. Сортировка записей\n  4. Для выхода в главное меню нажмите любую другую клавишу...");
                 userAnswer = Console.ReadLine();
                 switch (userAnswer)
                 {
@@ -231,6 +236,9 @@ namespace ConsoleApp1
                         break;
                     case "2":
                         rp.DeleteRec();
+                        break;
+                    case "3":
+                        rp.SortRec();
                         break;
                     default:
                         isExit = true;
@@ -276,8 +284,9 @@ namespace ConsoleApp1
                 ConsoleHelp.PrintSubtitle("ВЫБОР ЗАПИСИ(-ЕЙ)");
                 Console.WriteLine($"Сделайте выбор:\n  1. Выбор записи по дате(краткий формат) \n  " +
                     $"2. Выбор записи по номеру(краткий формат)" +
-                    "\n  3. Выбор записи по дате(полный вывод)\n  4. Выбор записи по номеру(полный вывод)" +
-                    "\n  5. Для выхода в главное меню нажмите любую другую клавишу...");
+                    "\n  3. Выбор записи по дате(полный формат)\n  4. Выбор записи по номеру(полный формат)" +
+                    "\n  5. Выбор всех записей(краткий формат)\n  6. Выбор всех записей(полный формат)" +
+                    "\n  7. Для выхода в главное меню нажмите любую другую клавишу...");
                 userAnswer = Console.ReadLine();
                 switch (userAnswer)
                 {
@@ -292,6 +301,12 @@ namespace ConsoleApp1
                         break;
                     case "4":
                         rp.ChooseRecs(2, "full");// по ид, полный формат
+                        break;
+                    case "5":
+                        rp.ChooseRecs(3, "short");// по ид, полный формат
+                        break;
+                    case "6":
+                        rp.ChooseRecs(3, "full");// по ид, полный формат
                         break;
                     default:
                         isExit = true;

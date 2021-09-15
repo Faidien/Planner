@@ -95,5 +95,7 @@ namespace ConsoleApp1
             string s = $"{ID}~{Title}~{Text}~{Importance}~{DataCreate}";
             return s;
         }
+
+       
     }
 }

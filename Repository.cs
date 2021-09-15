@@ -204,6 +204,164 @@ namespace ConsoleApp1
         }
 
         /// <summary>
+        /// Сортировка данных - главный метод выбора сортировки
+        /// </summary>
+        internal void SortRec()
+        {
+            Console.WriteLine();
+            Console.WriteLine("Введите параметр сортировки:\n 1. По номеру записи" +
+                "\n 2. По заголовку записи\n 3. По тексту записи\n 4. По приоритетности записи" +
+                "\n 5. По дате и времени записи");
+            string mode = Console.ReadLine();
+
+            switch (mode)
+            {
+                case "1":
+                    Sort(records[0].ID);
+                    break;
+                case "2":
+                    SortT(records[0].Title);
+                    break;
+                case "3":
+                    Sort(records[0].Text);
+                    break;
+                case "4":
+                    Sort(records[0].Importance);
+                    break;
+                case "5":
+                    Sort(records[0].DataCreate);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Сортировка по номеру записи
+        /// </summary>
+        /// <param name="_"></param>
+        public void Sort(uint _)
+        {
+            for (int i = 0; i < records.Length; i++)
+            {
+                for (int j = i + 1; j < records.Length; j++)
+                {
+                    if (records[j].ID != 0 && records[i].ID != 0)
+                    {
+                        if (records[i].ID > records[j].ID)
+                        {
+                            Record temp = records[i];
+                            records[i] = records[j];
+                            records[j] = temp;
+                        }
+                    }
+                }
+            }
+            Footer("отсортирована по номеру записи!", true);
+
+        }
+
+        /// <summary>
+        /// Сортировка по тексту записи
+        /// </summary>
+        /// <param name="_"></param>
+        public void Sort(string _)
+        {
+            for (int i = 0; i < records.Length; i++)
+            {
+                for (int j = i + 1; j < records.Length; j++)
+                {
+                    if (records[j].ID != 0 && records[i].ID != 0)
+                    {
+                        if ((records[i].Text.CompareTo(records[j].Text)) == 1)
+                        {
+                            Record temp = records[i];
+                            records[i] = records[j];
+                            records[j] = temp;
+                        }
+                    }
+                }
+            }
+            Footer("отсортирована по тексту записи!", true);
+
+        }
+
+        /// <summary>
+        /// Сортировка по заглавию записи
+        /// </summary>
+        /// <param name="_"></param>
+        public void SortT(string _)
+        {
+            for (int i = 0; i < records.Length; i++)
+            {
+                for (int j = i + 1; j < records.Length; j++)
+                {
+                    if (records[j].ID != 0 && records[i].ID != 0)
+                    {
+
+                        if ((records[i].Title.CompareTo(records[j].Title)) == 1)
+                        {
+                            Record temp = records[i];
+                            records[i] = records[j];
+                            records[j] = temp;
+                        }
+                    }
+                }
+            }
+            Footer("отсортирована по заглавию записи!", true);
+
+        }
+
+        /// <summary>
+        /// Сортировка по дате записи
+        /// </summary>
+        /// <param name="_"></param>
+        public void Sort(DateTime _)
+        {
+            for (int i = 0; i < records.Length; i++)
+            {
+                for (int j = i + 1; j < records.Length; j++)
+                {
+                    if (records[j].ID != 0 && records[i].ID != 0)
+                    {
+                        if (records[i].DataCreate > records[j].DataCreate)
+                        {
+                            Record temp = records[i];
+                            records[i] = records[j];
+                            records[j] = temp;
+                        }
+                    }
+                }
+            }
+            Footer("отсортирована по дате!", true);
+
+        }
+
+        /// <summary>
+        /// Сортировка по приоритетности записи
+        /// </summary>
+        /// <param name="_"></param>
+        public void Sort(int _)
+        {
+            for (int i = 0; i < records.Length; i++)
+            {
+                for (int j = i + 1; j < records.Length; j++)
+                {
+                    if (records[j].ID != 0 && records[i].ID != 0)
+                    {
+                        if (records[i].Importance > records[j].Importance)
+                        {
+                            Record temp = records[i];
+                            records[i] = records[j];
+                            records[j] = temp;
+                        }
+                    }
+                }
+            }
+            Footer("отсортирована по приритетности!", true);
+        }
+
+        /// <summary>
         /// Выборка записей. Есть два режима: 1 - по дате, 2 - по ид, 
         /// и два формата вывода:  full - полный, short = короткий
         /// </summary>
@@ -261,6 +419,32 @@ namespace ConsoleApp1
                     foreach (var item in records)
                     {
                         if (item.ID != 0 && item.ID == ID)
+                        {
+                            if (format == "short")
+                                item.Print(1);
+                            else
+                                item.Print();
+                            isFind = true;
+                            break;
+                        }
+                        else
+                        {
+                            isFind = false;
+                        }
+                    }
+
+                    Console.WriteLine("\n\n============================================");
+                    Footer("выбрана(-ы)!", isFind);
+                    break;
+                case 3:
+                    Console.WriteLine("Вывод всех записей");
+
+
+                    Console.WriteLine("\n\n============================================");
+                    Console.WriteLine($"Записи:");
+                    foreach (var item in records)
+                    {
+                        if (item.ID != 0)
                         {
                             if (format == "short")
                                 item.Print(1);

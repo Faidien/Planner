@@ -450,17 +450,11 @@ namespace ConsoleApp1
                                 item.Print(1);
                             else
                                 item.Print();
-                            isFind = true;
-                            break;
-                        }
-                        else
-                        {
-                            isFind = false;
                         }
                     }
 
                     Console.WriteLine("\n\n============================================");
-                    Footer("выбрана(-ы)!", isFind);
+                    Footer("выбрана(-ы)!", true);
                     break;
                 default:
                     break;

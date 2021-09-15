@@ -67,7 +67,7 @@ namespace ConsoleApp1
         public void Print()
         {
             Console.WriteLine("*************************************");
-            Console.WriteLine($" 1. Номер записи: {ID}.\n 2. Заголовок записи: {Title}.\n 3. Текст записи: {Text}.\n" +
+            Console.WriteLine($" 1. Номер записи: {ID}.\n 2. Заголовок записи: {Title}.\n 3. Текст записи: {Text}\n" +
                 $" 4. Дата создания записи: {DataCreate}.\n" +
                 $" 5. Важность записи: {Importance}");
             Console.WriteLine();
@@ -81,8 +81,7 @@ namespace ConsoleApp1
         {
             Console.WriteLine("*************************************");
             Console.WriteLine($"  1. Номер записи: {ID}.\n  2. Заголовок записи: {Title}.\n" +
-                $"  3. Дата и время создания записи: {DataCreate}.\n" +
-                $"  5. Важность записи: {Importance}");
+                $"  3. Дата и время создания записи: {DataCreate}.");
             Console.WriteLine();
         }
 
@@ -96,6 +95,6 @@ namespace ConsoleApp1
             return s;
         }
 
-       
+
     }
 }

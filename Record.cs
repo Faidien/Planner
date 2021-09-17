@@ -11,7 +11,7 @@ namespace ConsoleApp1
         /// <summary>
         /// ИД записи - порядковые номера от 1. При удалении не сдвигаются номера.
         /// </summary>
-        public uint ID { get; set; }
+        public int ID { get; set; }
 
         /// <summary>
         /// Заглавие записи - первое слово записи для "короткого" вывода в консоль
@@ -39,7 +39,7 @@ namespace ConsoleApp1
         /// <param name="id"></param>
         /// <param name="text"></param>
         /// <param name="importance"></param>
-        public Record(uint id, string text, int importance) : this(id, "", text, importance, DateTime.Now)
+        public Record(int id, string text, int importance) : this(id, "", text, importance, DateTime.Now)
         {
             this.Title = (text.IndexOf(" ") == -1) ? text : text.Substring(0, text.IndexOf(" ")) + "...";
         }
@@ -52,7 +52,7 @@ namespace ConsoleApp1
         /// <param name="text"></param>
         /// <param name="importance"></param>
         /// <param name="dateCreate"></param>
-        public Record(uint id, string title, string text, int importance, DateTime dateCreate)
+        public Record(int id, string title, string text, int importance, DateTime dateCreate)
         {
             this.ID = id;
             this.Title = title;

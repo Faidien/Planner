@@ -26,7 +26,9 @@ namespace ConsoleApp1
         /// Порядковый номер записи, должен браться из файла, если таковой есть.
         /// Если файла нет - запись будет первой. 
         /// </summary>
-        public uint id;
+        public int id;
+
+        int mode;
 
         /// <summary>
         /// Флаг найдена ли запись или нет
@@ -39,7 +41,7 @@ namespace ConsoleApp1
         /// <param name="arr"></param>
         public void GetID(Record[] arr)
         {
-            uint maxID = 0;
+            int maxID = 0;
             foreach (Record item in arr)
             {
                 maxID = item.ID > maxID ? item.ID : maxID;
@@ -54,9 +56,7 @@ namespace ConsoleApp1
         public void CreateBase(string path)
         {
 
-            using (FileStream fs = File.Create(path))
-            {
-            }
+            using FileStream fs = File.Create(path);
         }
 
         /// <summary>
@@ -93,14 +93,13 @@ namespace ConsoleApp1
             Console.WriteLine("-------------------------------------------");
             try
             {
-                using (StreamReader sr = new StreamReader(path))
+                using (StreamReader sr = new(path))
                 {
-
                     while (!sr.EndOfStream)
                     {
                         args = sr.ReadLine().Split('~');
                         if (args != null)
-                            Add(new Record(Convert.ToUInt32(args[0]), args[1], args[2], Convert.ToInt32(args[3]), Convert.ToDateTime(args[4])));
+                            Add(new Record(Convert.ToInt32(args[0]), args[1], args[2], Convert.ToInt32(args[3]), Convert.ToDateTime(args[4])));
                     }
                 }
             }
@@ -120,7 +119,7 @@ namespace ConsoleApp1
         public void Init()
         {
 
-            Random r = new Random();
+            Random r = new();
             Console.Write("Ваш дневник приветсвует Вас!\nСейчас проверю наличие базы данных записей");
             ConsoleHelp.Turn(r.Next(5, 15));
             Console.WriteLine();
@@ -168,7 +167,7 @@ namespace ConsoleApp1
                     break;
                 case 2:
                     // PC gen mode
-                    Random r = new Random();
+                    Random r = new();
                     string[] sentense = { "Достал.", "Работа - это такое место, где с утра хочется есть, " +
                             "после обеда - спать, и все время такое чувство, что пора домой.","Скажи мне, кто твой враг," +
                             "и я скажу тебе, где достать патроны дешевле", "Мне нравится работать программистом по своему" +
@@ -212,154 +211,91 @@ namespace ConsoleApp1
             Console.WriteLine("Введите параметр сортировки:\n 1. По номеру записи" +
                 "\n 2. По заголовку записи\n 3. По тексту записи\n 4. По приоритетности записи" +
                 "\n 5. По дате и времени записи");
-            string mode = Console.ReadLine();
-
-            switch (mode)
+            do
             {
-                case "1":
-                    Sort(records[0].ID);
-                    break;
-                case "2":
-                    SortT(records[0].Title);
-                    break;
-                case "3":
-                    Sort(records[0].Text);
-                    break;
-                case "4":
-                    Sort(records[0].Importance);
-                    break;
-                case "5":
-                    Sort(records[0].DataCreate);
-                    break;
-                default:
-                    break;
-            }
-        }
+                int.TryParse(Console.ReadLine(), out mode);
 
-        /// <summary>
-        /// Сортировка по номеру записи
-        /// </summary>
-        /// <param name="_"></param>
-        public void Sort(uint _)
+            } while (mode < 1 || mode > 5);
+
+            QuickSort(records, mode);
+
+        }
+        //метод для обмена элементов массива
+        static void Swap<T>(ref T x, ref T y)
         {
-            for (int i = 0; i < records.Length; i++)
-            {
-                for (int j = i + 1; j < records.Length; j++)
-                {
-                    if (records[j].ID != 0 && records[i].ID != 0)
-                    {
-                        if (records[i].ID > records[j].ID)
-                        {
-                            Record temp = records[i];
-                            records[i] = records[j];
-                            records[j] = temp;
-                        }
-                    }
-                }
-            }
-            Footer("отсортирована по номеру записи!", true);
-
+            var t = x;
+            x = y;
+            y = t;
         }
 
-        /// <summary>
-        /// Сортировка по тексту записи
-        /// </summary>
-        /// <param name="_"></param>
-        public void Sort(string _)
+        //метод возвращающий индекс опорного элемента
+        static int Partition(Record[] array, int minIndex, int maxIndex, int mode)
         {
-            for (int i = 0; i < records.Length; i++)
+            bool result;
+            var pivot = minIndex - 1;
+            for (var i = minIndex; i < maxIndex; i++)
             {
-                for (int j = i + 1; j < records.Length; j++)
+                if (array[i].ID == 0)
                 {
-                    if (records[j].ID != 0 && records[i].ID != 0)
-                    {
-                        if ((records[i].Text.CompareTo(records[j].Text)) == 1)
-                        {
-                            Record temp = records[i];
-                            records[i] = records[j];
-                            records[j] = temp;
-                        }
-                    }
+                    continue;
                 }
-            }
-            Footer("отсортирована по тексту записи!", true);
+                else
+                {
+                    switch (mode)
+                    {
+                        case 1:
+                            result = array[i].ID < array[maxIndex].ID;
+                            break;
+                        case 2:
+                            result = array[i].Title.CompareTo(array[maxIndex].Title) == -1;
+                            break;
+                        case 3:
+                            result = array[i].Text.CompareTo(array[maxIndex].Text) == -1;
+                            break;
+                        case 4:
+                            result = array[i].Importance < array[maxIndex].Importance;
+                            break;
+                        case 5:
+                            result = array[i].DataCreate < array[maxIndex].DataCreate;
+                            break;
+                        default:
+                            result = false;
+                            break;
+                    }
+                    if (result)
+                    {
+                        pivot++;
+                        Swap(ref array[pivot], ref array[i]);
+                    }
+                    //break;
+                }
 
+            }
+
+            pivot++;
+            Swap(ref array[pivot], ref array[maxIndex]);
+            return pivot;
         }
 
-        /// <summary>
-        /// Сортировка по заглавию записи
-        /// </summary>
-        /// <param name="_"></param>
-        public void SortT(string _)
+        //быстрая сортировка
+        static Record[] QuickSort(Record[] array, int minIndex, int maxIndex, int mode)
         {
-            for (int i = 0; i < records.Length; i++)
+            if (minIndex >= maxIndex)
             {
-                for (int j = i + 1; j < records.Length; j++)
-                {
-                    if (records[j].ID != 0 && records[i].ID != 0)
-                    {
-
-                        if ((records[i].Title.CompareTo(records[j].Title)) == 1)
-                        {
-                            Record temp = records[i];
-                            records[i] = records[j];
-                            records[j] = temp;
-                        }
-                    }
-                }
+                return array;
             }
-            Footer("отсортирована по заглавию записи!", true);
+            var pivotIndex = Partition(array, minIndex, maxIndex, mode);
+            QuickSort(array, minIndex, pivotIndex - 1, mode);
+            QuickSort(array, pivotIndex + 1, maxIndex, mode);
 
+            return array;
         }
 
-        /// <summary>
-        /// Сортировка по дате записи
-        /// </summary>
-        /// <param name="_"></param>
-        public void Sort(DateTime _)
+        static Record[] QuickSort(Record[] array, int mode)
         {
-            for (int i = 0; i < records.Length; i++)
-            {
-                for (int j = i + 1; j < records.Length; j++)
-                {
-                    if (records[j].ID != 0 && records[i].ID != 0)
-                    {
-                        if (records[i].DataCreate > records[j].DataCreate)
-                        {
-                            Record temp = records[i];
-                            records[i] = records[j];
-                            records[j] = temp;
-                        }
-                    }
-                }
-            }
-            Footer("отсортирована по дате!", true);
-
+            return QuickSort(array, 0, array.Length - 1, mode);
         }
 
-        /// <summary>
-        /// Сортировка по приоритетности записи
-        /// </summary>
-        /// <param name="_"></param>
-        public void Sort(int _)
-        {
-            for (int i = 0; i < records.Length; i++)
-            {
-                for (int j = i + 1; j < records.Length; j++)
-                {
-                    if (records[j].ID != 0 && records[i].ID != 0)
-                    {
-                        if (records[i].Importance > records[j].Importance)
-                        {
-                            Record temp = records[i];
-                            records[i] = records[j];
-                            records[j] = temp;
-                        }
-                    }
-                }
-            }
-            Footer("отсортирована по приритетности!", true);
-        }
 
         /// <summary>
         /// Выборка записей. Есть два режима: 1 - по дате, 2 - по ид, 
@@ -371,7 +307,6 @@ namespace ConsoleApp1
             switch (mode)
             {
                 case 1:
-                    Console.WriteLine("Если нужно вывести все записи, оставьте поля ввода пустыми.");
                     Console.Write("Введите начальную дату: ");
                     DateTime.TryParse(Console.ReadLine(), out startDate);
                     Console.Write("Введите конечную дату: ");
@@ -412,7 +347,7 @@ namespace ConsoleApp1
                 case 2:
                     Console.WriteLine("Вывод записей по номеру.");
                     Console.Write("Введите номер записи: ");
-                    uint.TryParse(Console.ReadLine(), out uint ID);
+                    int.TryParse(Console.ReadLine(), out int ID);
 
                     Console.WriteLine("\n\n============================================");
                     Console.WriteLine($"Запись по номеру {ID}:");
@@ -463,7 +398,7 @@ namespace ConsoleApp1
         }
 
         /// <summary>
-        /// Проверка на валидность введного приоритета. Если не валиден - то по умолчанию приоритет будет 1
+        /// Проверка на валидность введеного приоритета. Если не валиден - то по умолчанию приоритет будет 1
         /// </summary>
         /// <param name="priority"></param>
         /// <returns></returns>
@@ -516,7 +451,7 @@ namespace ConsoleApp1
         {
 
             Console.Write("Введите номер записи для удаления: ");
-            uint.TryParse(Console.ReadLine(), out uint recForDel);
+            int.TryParse(Console.ReadLine(), out int recForDel);
             for (int i = 0; i < records.Length; i++)
             {
                 if (records[i].ID != 0)
@@ -543,7 +478,7 @@ namespace ConsoleApp1
         public void EditRec()
         {
             Console.Write("Введите номер записи для редактирования: ");
-            uint.TryParse(Console.ReadLine(), out uint recForEdit);
+            int.TryParse(Console.ReadLine(), out int recForEdit);
             for (int i = 0; i < records.Length; i++)
             {
                 if (records[i].ID != 0)

@@ -27,7 +27,7 @@ namespace ConsoleApp1
         static void Main()
         {
             Console.Title = "Ежедневник 1.5";
-            Repository rp = new Repository(path);
+            Repository rp = new(path);
             while (!isExit)
             {
                 ConsoleHelp.PrintSubtitle("ГЛАВНОЕ МЕНЮ");
@@ -76,7 +76,7 @@ namespace ConsoleApp1
             {
                 Console.WriteLine("\n\n============================================");
                 Console.WriteLine("Последние записи на сегодня:");
-                DateTime n = new DateTime();
+                DateTime n = new();
                 int countRec = rp.records.Length - 1;
                 int len = rp.records.Length < 3 ? rp.records.Length : 3;
                 n = DateTime.Now;
@@ -93,6 +93,11 @@ namespace ConsoleApp1
                             Console.WriteLine("*************************************");
                             rp.records[countRec--].Print(1);
                             Console.WriteLine();
+                        }
+                        else
+                        {
+                            countRec--;
+                            i--;
                         }
                     }
                     else
@@ -267,7 +272,7 @@ namespace ConsoleApp1
                 " что человек однажды начнет мыслить, как компьютер.", "Дневники и техника дойдут до такого совершенства, что человек " +
                 "сможет обойтись без себя."};
 
-            Random r = new Random();
+            Random r = new();
             Console.WriteLine(byeSentence[r.Next(byeSentence.Length)]);
 
             Environment.Exit(0);
